@@ -3,12 +3,16 @@
 #
 # Originally written by Svein-Erik Larsen <feinom@gmail.com> to be used at UiA.
 # Modified by Øyvind Øvergaard <oyvind.overgaard@gmail.com> for use at HiN.
+# Modified by Ali Kaafarani <kaafarani.ali@gmail.com> for general use.
 #
 
-"""Use the authentication on HiNs wireless network from the command line."""
+"""Use the authentication on HPs wireless network from the command line."""
 
 import urllib2, getpass, sys
 from optparse import OptionParser
+
+# the domain to the HP login service, including the final slash, excluding the "logon" resource
+AUTH_SITE="https://hp740.grm.hia.no/"
 
 def getlogonstatus(websitedata):
     """Check if we're logged in or not"""
@@ -24,7 +28,7 @@ def getlogonstatus(websitedata):
 def logonstatus():
     """Uses the getlogonstatus function and prints out a user friendly
     message"""
-    site = urllib2.urlopen("https://acs.hin.no/logon")
+    site = urllib2.urlopen(AUTH_SITE)
     the_page = site.read()
     print getlogonstatus(the_page)
     sys.exit()
@@ -40,7 +44,7 @@ def find_value(pagesplit, fieldname):
 
 def log_in():
     """Logs the user in"""
-    site = urllib2.urlopen("https://acs.hin.no/")
+    site = urllib2.urlopen(AUTH_SITE)
     the_page = site.read()
     page_split = the_page.split()
 
@@ -49,14 +53,14 @@ def log_in():
     secret = find_value(page_split, "secret")
     vernier = find_value(page_split, "verify_vernier")
 
-    dummy = urllib2.urlopen("https://acs.hin.no/logon?query_string=&javaworks=1&vernier_id=hp&product_id=VNSS&releast_id=1.0&logon_status=0&guest_allowed=0&realm_required=0&secret="+secret+"&verify_vernier="+vernier+"&username="+username+"&password="+password+"&logon_action=Logon+User")
+    dummy = urllib2.urlopen(AUTH_SITE + "/logon?query_string=&javaworks=1&vernier_id=hp&product_id=VNSS&releast_id=1.0&logon_status=0&guest_allowed=0&realm_required=0&secret="+secret+"&verify_vernier="+vernier+"&username="+username+"&password="+password+"&logon_action=Logon+User")
 
     logonstatus()
     sys.exit()
 
 def log_out():
     """Logs the user out"""
-    site = urllib2.urlopen("https://acs.hin.no/logon?logon_action=Logoff")
+    site = urllib2.urlopen(AUTH_SITE + "logon?logon_action=Logoff")
     logoffpage = site.read()
     
     if logoffpage.rfind("<!-- logged_off") > -1:
@@ -70,7 +74,7 @@ def log_out():
 def main():
     """Main function"""
 
-    parser = OptionParser(description='Lets you log in via the authentication on the wireless network at HiN. You have to be connected to the wireless network before trying to use this program to authenticate.')
+    parser = OptionParser(description='Lets you log in to the browser-based wireless authentication service offered by HP\'s Access Control Server 740wl.')
     
     parser.add_option("-s", "--status", 
                       action="store_true", 
