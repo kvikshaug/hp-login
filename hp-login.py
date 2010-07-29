@@ -8,16 +8,32 @@
 
 """Use the authentication on HPs wireless network from the command line."""
 
-import urllib2, getpass, sys
+import urllib2, getpass, sys, fileinput
 from optparse import OptionParser
 
-# the domain to the HP login service, including the final slash, excluding the "logon" resource
-AUTH_SITE="https://hp740.grm.hia.no/"
+# a class for storing config variables
+class Config:
+  AUTH_SITE=""
+  USERNAME=""
+  PASSWORD=""
+
+def read_config():
+    for line in fileinput.input('hp-login.conf'):
+        if (line.startswith("auth_site=")):
+            Config.AUTH_SITE = line.split("\"")[1]
+        elif (line.startswith("username=")):
+            Config.USERNAME = line.split("\"")[1]
+        elif (line.startswith("password=")):
+            Config.PASSWORD = line.split("\"")[1]
+
+    if (Config.AUTH_SITE == ""):
+        print "Please provide a valid auth_site variable in hp-login.conf."
+        sys.exit()
 
 def getlogonstatus():
     """Check if we're logged in or not. Returns "OFF" if not logged on, or the username of the logged on user if logged on"""
     print "Checking current status..."
-    site = urllib2.urlopen(AUTH_SITE).read()
+    site = urllib2.urlopen(Config.AUTH_SITE).read()
 
     if site.rfind("You are not logged on") > 0:
         return "OFF"
@@ -45,13 +61,15 @@ def find_value(pagesplit, fieldname):
 def log_in():
     """Logs the user in"""
 
-    username = raw_input("Username: ")
-    password = getpass.getpass()
+    if (Config.USERNAME == ""):
+        Config.USERNAME = raw_input("Username: ")
+    if (Config.PASSWORD == ""):
+        Config.PASSWORD = getpass.getpass()
 
     print "Retrieving verification keys..."
     attempts = 0
     while attempts < 5:
-        page = urllib2.urlopen(AUTH_SITE).read()
+        page = urllib2.urlopen(Config.AUTH_SITE).read()
         if page.rfind("verify_vernier") > 0:
             break
         else:
@@ -67,7 +85,7 @@ def log_in():
     vernier = find_value(page_split, "verify_vernier")
 
     print "Attempting login..."
-    logon_site = urllib2.urlopen(AUTH_SITE + "/logon?query_string=&javaworks=1&vernier_id=hp&product_id=VNSS&releast_id=1.0&logon_status=0&guest_allowed=0&realm_required=0&secret="+secret+"&verify_vernier="+vernier+"&username="+username+"&password="+password+"&logon_action=Logon+User")
+    logon_site = urllib2.urlopen(Config.AUTH_SITE + "/logon?query_string=&javaworks=1&vernier_id=hp&product_id=VNSS&releast_id=1.0&logon_status=0&guest_allowed=0&realm_required=0&secret="+secret+"&verify_vernier="+vernier+"&username="+username+"&password="+password+"&logon_action=Logon+User")
 
     if logon_site.rfind("Bad username or password") > 0:
         print "Wrong username or password."
@@ -82,7 +100,7 @@ def log_in():
 def log_out():
     """Logs the user out"""
     print "Logging out..."
-    urllib2.urlopen(AUTH_SITE + "logon?logon_action=Logoff").read()
+    urllib2.urlopen(Config.AUTH_SITE + "logon?logon_action=Logoff").read()
 
     status = getlogonstatus()
     if status == "OFF":
@@ -109,6 +127,8 @@ def main():
                       help="Log out.")
 
     (options, args) = parser.parse_args()
+
+    read_config()
 
     if options.status:
         logonstatus()
