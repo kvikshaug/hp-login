@@ -16,6 +16,7 @@ AUTH_SITE="https://hp740.grm.hia.no/"
 
 def getlogonstatus():
     """Check if we're logged in or not. Returns "OFF" if not logged on, or the username of the logged on user if logged on"""
+    print "Checking current status..."
     site = urllib2.urlopen(AUTH_SITE).read()
 
     if site.rfind("You are not logged on") > 0:
@@ -47,10 +48,12 @@ def log_in():
     username = raw_input("Username: ")
     password = getpass.getpass()
 
+    print "Retrieving verification keys..."
     page_split = urllib2.urlopen(AUTH_SITE).read().split()
     secret = find_value(page_split, "secret")
     vernier = find_value(page_split, "verify_vernier")
 
+    print "Attempting login..."
     logon_site = urllib2.urlopen(AUTH_SITE + "/logon?query_string=&javaworks=1&vernier_id=hp&product_id=VNSS&releast_id=1.0&logon_status=0&guest_allowed=0&realm_required=0&secret="+secret+"&verify_vernier="+vernier+"&username="+username+"&password="+password+"&logon_action=Logon+User")
 
     if logon_site.rfind("Bad username or password") > 0:
@@ -65,6 +68,7 @@ def log_in():
 
 def log_out():
     """Logs the user out"""
+    print "Logging out..."
     urllib2.urlopen(AUTH_SITE + "logon?logon_action=Logoff").read()
 
     status = get_status()
