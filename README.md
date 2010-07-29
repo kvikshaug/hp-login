@@ -8,7 +8,7 @@ This is a small script to automatically log you on from CLI, instead of having t
 
 ## Cool, I need that, what do I do?
 
-1. Enter the URL to your authentication service in `hp-login.conf`
+1. Enter the URL to your authentication service in `config.py`
 2. Run `hp-login.py -i` to log in
 
 ### Optional:
