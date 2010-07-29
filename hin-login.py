@@ -43,19 +43,25 @@ def find_value(pagesplit, fieldname):
 
 def log_in():
     """Logs the user in"""
-    site = urllib2.urlopen(AUTH_SITE)
-    the_page = site.read()
-    page_split = the_page.split()
 
     username = raw_input("Username: ")
     password = getpass.getpass()
+
+    page_split = urllib2.urlopen(AUTH_SITE).read().split()
     secret = find_value(page_split, "secret")
     vernier = find_value(page_split, "verify_vernier")
 
-    dummy = urllib2.urlopen(AUTH_SITE + "/logon?query_string=&javaworks=1&vernier_id=hp&product_id=VNSS&releast_id=1.0&logon_status=0&guest_allowed=0&realm_required=0&secret="+secret+"&verify_vernier="+vernier+"&username="+username+"&password="+password+"&logon_action=Logon+User")
+    logon_site = urllib2.urlopen(AUTH_SITE + "/logon?query_string=&javaworks=1&vernier_id=hp&product_id=VNSS&releast_id=1.0&logon_status=0&guest_allowed=0&realm_required=0&secret="+secret+"&verify_vernier="+vernier+"&username="+username+"&password="+password+"&logon_action=Logon+User")
 
-    logonstatus()
-    sys.exit()
+    if logon_site.rfind("Bad username or password") > 0:
+        print "Wrong username or password; you are not logged on."
+        sys.exit()
+
+    status = get_status()
+    if status == "OFF":
+        print "Sorry, logging on failed for some unknown reason!"
+    else:
+        print "Now logged on as " + status + "."
 
 def log_out():
     """Logs the user out"""
