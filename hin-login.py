@@ -28,7 +28,7 @@ def getlogonstatus():
 
 def logonstatus():
     """Displays the current logon status"""
-    status = get_status()
+    status = getlogonstatus()
     if status == "OFF":
         print "You are not logged on."
     else:
@@ -57,21 +57,21 @@ def log_in():
     logon_site = urllib2.urlopen(AUTH_SITE + "/logon?query_string=&javaworks=1&vernier_id=hp&product_id=VNSS&releast_id=1.0&logon_status=0&guest_allowed=0&realm_required=0&secret="+secret+"&verify_vernier="+vernier+"&username="+username+"&password="+password+"&logon_action=Logon+User")
 
     if logon_site.rfind("Bad username or password") > 0:
-        print "Wrong username or password; you are not logged on."
+        print "Wrong username or password."
         sys.exit()
 
-    status = get_status()
+    status = getlogonstatus()
     if status == "OFF":
         print "Sorry, logging on failed for some unknown reason!"
     else:
-        print "Now logged on as " + status + "."
+        print "Logged on as " + status + "."
 
 def log_out():
     """Logs the user out"""
     print "Logging out..."
     urllib2.urlopen(AUTH_SITE + "logon?logon_action=Logoff").read()
 
-    status = get_status()
+    status = getlogonstatus()
     if status == "OFF":
         print "You are now logged off."
     else:
