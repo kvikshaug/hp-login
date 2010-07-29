@@ -26,13 +26,12 @@ def getlogonstatus():
         return split_site[71].partition("</b>")[0]
 
 def logonstatus():
-    """Uses the getlogonstatus function and prints out a user friendly
-    message"""
-    site = urllib2.urlopen(AUTH_SITE)
-    the_page = site.read()
-    print getlogonstatus(the_page)
-    sys.exit()
-
+    """Displays the current logon status"""
+    status = get_status()
+    if status == "OFF":
+        print "You are not logged on."
+    else:
+        print "Logged on as " + status
 
 def find_value(pagesplit, fieldname):
     """Tries to find the 'secret' and 'vernier' fields"""
