@@ -15,7 +15,7 @@ This is a small script to automatically log you on from CLI, instead of having t
 
 * Add your username and/or password in cleartext in the config file to avoid entering them for each logon (but exercise caution!)
 * Add a symbolic link to /usr/local/bin to be able to login from anywhere
-* - *OR* - add an alias or function to your shell
+* *OR*: add an alias or function to your shell
 
 ## Usage
 
@@ -32,7 +32,7 @@ This is a small script to automatically log you on from CLI, instead of having t
 
 ## Credits
 
-Originally written by Svein-Erik Larsen to be used at UiA.
-Modified by Øyvind Øvergaard (oyvindio) for use at HiN.
-Modified by Ali Kaafarani (murr4y) for general use.
+* Originally written by Svein-Erik Larsen to be used at UiA.
+* Modified by Øyvind Øvergaard (oyvindio) for use at HiN.
+* Modified by Ali Kaafarani (murr4y) for general use.
 
