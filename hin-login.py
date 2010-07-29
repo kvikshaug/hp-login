@@ -59,16 +59,13 @@ def log_in():
 
 def log_out():
     """Logs the user out"""
-    site = urllib2.urlopen(AUTH_SITE + "logon?logon_action=Logoff")
-    logoffpage = site.read()
-    
-    if logoffpage.rfind("<!-- logged_off") > -1:
-        print "You are now logged off..."
+    urllib2.urlopen(AUTH_SITE + "logon?logon_action=Logoff").read()
+
+    status = get_status()
+    if status == "OFF":
+        print "You are now logged off."
     else:
-        print "Hmmm...not logged off... Strange..."
-
-    sys.exit()
-
+        print "I tried to log you off, but you seem to still be logged on as " + status + " - please try again, or log off manually."
 
 def main():
     """Main function"""
