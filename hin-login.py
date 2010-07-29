@@ -14,16 +14,16 @@ from optparse import OptionParser
 # the domain to the HP login service, including the final slash, excluding the "logon" resource
 AUTH_SITE="https://hp740.grm.hia.no/"
 
-def getlogonstatus(websitedata):
-    """Check if we're logged in or not"""
-    location = websitedata.rfind("You are not logged on.")
+def getlogonstatus():
+    """Check if we're logged in or not. Returns "OFF" if not logged on, or the username of the logged on user if logged on"""
+    site = urllib2.urlopen(AUTH_SITE).read()
 
-    if websitedata.rfind("You are not logged on") > 0:
-        return "Not logged in" 
+    if site.rfind("You are not logged on") > 0:
+        return "OFF"
     else:
-        split_site = websitedata.split()
-        loginuser = split_site[70].partition("</b>")[0]
-        return "Logged in as: " + loginuser
+        # assuming that we are logged on. not sure if we might get an "expired" warning here instead.
+        split_site = site.split()
+        return split_site[71].partition("</b>")[0]
 
 def logonstatus():
     """Uses the getlogonstatus function and prints out a user friendly
