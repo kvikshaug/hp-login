@@ -49,7 +49,20 @@ def log_in():
     password = getpass.getpass()
 
     print "Retrieving verification keys..."
-    page_split = urllib2.urlopen(AUTH_SITE).read().split()
+    attempts = 0
+    while attempts < 5:
+        page = urllib2.urlopen(AUTH_SITE).read()
+        if page.rfind("verify_vernier") > 0:
+            break
+        else:
+            attempts = attempts + 1
+            print "No keys found! Logon page might have expired, retrying (" + str(attempts) + "/5)..."
+
+    if (attempts == 5):
+        print "The auth site wouldn't give me verification keys for some reason, please attempt a manual logon and check what's up."
+        return
+
+    page_split = page.split()
     secret = find_value(page_split, "secret")
     vernier = find_value(page_split, "verify_vernier")
 
