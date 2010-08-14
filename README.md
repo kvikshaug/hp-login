@@ -14,8 +14,8 @@ This is a small script to automatically log you on from CLI, instead of having t
 ### Optional:
 
 * Add your username and/or password in cleartext in the config file to avoid entering them for each logon (but exercise caution!)
-* Add a symbolic link to /usr/local/bin to be able to login from anywhere
-* *OR*: add an alias or function to your shell
+* Add a symbolic link to the script in /usr/local/bin to be able to login from anywhere
+* *OR*: add an alias or function to the script in your shell
 
 ## Usage
 
