@@ -33,6 +33,6 @@ This is a small script to automatically log you on from CLI, instead of having t
 ## Credits
 
 * Originally written by Svein-Erik Larsen to be used at UiA.
-* Modified by Øyvind Øvergaard (oyvindio) for use at HiN.
-* Modified by Ali Kaafarani (murr4y) for general use.
+* Modified by [Øyvind Øvergaard](http://github.com/oyvindio) for use at HiN.
+* Modified by [Ali Kaafarani](http://github.com/murr4y) for general use.
 
